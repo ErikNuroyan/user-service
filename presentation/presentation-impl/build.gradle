@@ -1,0 +1,5 @@
+dependencies {
+    implementation(project(":presentation:presentation-api"))
+    implementation(project(":domain"))
+    implementation(project(":business:business-api"))
+}
