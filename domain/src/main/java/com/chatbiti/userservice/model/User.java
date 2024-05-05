@@ -44,12 +44,18 @@ public class User implements UserDetails, Principal {
 
     public User() {}
 
-    public User(String email, String password, String firstName, String lastName, Boolean emailVerified) {
+    public User(String email, String password, String firstName, String lastName, Boolean emailVerified, List<Role> roles) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailVerified = emailVerified;
+        this.roles = roles;
+    }
+
+
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
     @Override

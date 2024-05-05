@@ -43,10 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @Nonnull FilterChain filterChain
     ) throws ServletException, IOException {
         if (request.getServletPath().contains("/v1/user/login") ||
-            request.getServletPath().contains("/v1/user/register")) {
+            request.getServletPath().contains("/v1/user/register") ||
+            request.getServletPath().contains("/h2-console")) { // TODO: Remove this later
             filterChain.doFilter(request, response);
             return;
         }
+
 
         String authHeader = request.getHeader(AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -66,7 +68,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            UserDetails userDetails;
+            try {
+                userDetails = userDetailsService.loadUserByUsername(email);
+            }
+            catch (Exception e) {
+                fillResponseBody(response, "failure", "Invalid token!");
+                return;
+            }
+
             if (jwtService.isValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

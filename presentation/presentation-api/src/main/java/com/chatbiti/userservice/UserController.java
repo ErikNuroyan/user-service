@@ -8,4 +8,6 @@ public interface UserController {
     public UserLoginResponseDto login(UserLoginRequest loginRequest);
 
     public UserAuthResponseDto authenticate();
+
+    public UserSubscribeResponseDto subscribe(String authorizationHeader);
 }

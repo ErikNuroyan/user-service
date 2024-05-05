@@ -42,10 +42,10 @@ public class LogoutHandlerService implements LogoutHandler {
         if (storedToken.isPresent()) {
             tokenRepository.delete(storedToken.get());
             fillResponseBody(response, "success", null);
+            return;
         }
-        else {
-            fillResponseBody(response, "failure", "Invalid or expired token!");
-        }
+
+        fillResponseBody(response, "failure", "Invalid or expired token!");
     }
 
     private void fillResponseBody(HttpServletResponse response, String status, String errorMessage) {

@@ -2,10 +2,9 @@ package com.chatbiti.userservice;
 
 import com.chatbiti.userservice.model.*;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -35,5 +34,18 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/authenticate")
     public UserAuthResponseDto authenticate() {
         return userService.authenticate();
+    }
+
+    @Override
+    @PostMapping("/subscribe")
+    public UserSubscribeResponseDto subscribe(@RequestHeader("Authorization") String authorizationHeader) {
+        // This shouldn't happen in general since Authentication filter will not let the request reach here
+        // This is just a sanity check
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return new UserSubscribeResponseDto("failure", Optional.of("Unauthorised!"), Optional.empty());
+        }
+
+        String token = authorizationHeader.substring(7);
+        return userService.subscribe(token);
     }
 }
