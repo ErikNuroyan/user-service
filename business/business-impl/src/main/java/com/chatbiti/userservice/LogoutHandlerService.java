@@ -33,7 +33,7 @@ public class LogoutHandlerService implements LogoutHandler {
         String authHeader = request.getHeader(AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            fillResponseBody(response, "failure", "You are not logged in!");
+            fillResponseBody(response, "failure", Optional.of("You are not logged in!"));
             return;
         }
 
@@ -41,14 +41,14 @@ public class LogoutHandlerService implements LogoutHandler {
         Optional<Token> storedToken = tokenRepository.findByToken(token);
         if (storedToken.isPresent()) {
             tokenRepository.delete(storedToken.get());
-            fillResponseBody(response, "success", null);
+            fillResponseBody(response, "success", Optional.empty());
             return;
         }
 
-        fillResponseBody(response, "failure", "Invalid or expired token!");
+        fillResponseBody(response, "failure", Optional.of("Invalid or expired token!"));
     }
 
-    private void fillResponseBody(HttpServletResponse response, String status, String errorMessage) {
+    private void fillResponseBody(HttpServletResponse response, String status, Optional<String> errorMessage) {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 

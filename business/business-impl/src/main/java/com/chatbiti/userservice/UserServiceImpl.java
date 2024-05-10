@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         User user = new User(email,passwordEncoder.encode(password), firstName, lastName, false, List.of(roleSearchResult.get()));
         userRepository.save(user);
 
-        return new UserRegisterResponseDto("success", null);
+        return new UserRegisterResponseDto("success", Optional.empty());
     }
 
     @Override
@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService {
                     new UsernamePasswordAuthenticationToken(email, password)
             );
         }
-        catch (AuthenticationException exception) {
-            return new UserLoginResponseDto("failure", Optional.of("Wrong email or password!"), null, null);
+        catch (Exception exception) {
+            return new UserLoginResponseDto("failure", Optional.of("Wrong email or password!"), Optional.empty(), Optional.empty());
         }
 
         var claims = new HashMap<String, Object>();
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
                 user.getEmailVerified()
         );
 
-        return new UserLoginResponseDto("success", null, Optional.of(userInfo), Optional.of(token));
+        return new UserLoginResponseDto("success", Optional.empty(), Optional.of(userInfo), Optional.of(token));
     }
 
     @Override

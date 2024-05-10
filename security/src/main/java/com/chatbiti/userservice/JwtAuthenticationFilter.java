@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -120,7 +121,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         Map<String, Object> responseMap = new LinkedHashMap<>();
         responseMap.put("status", status);
-        responseMap.put("errorMessage", errorMessage);
+        responseMap.put("errorMessage", Optional.of(errorMessage));
         try {
             mapper.writeValue(response.getWriter(), responseMap);
         } catch (IOException e) {
